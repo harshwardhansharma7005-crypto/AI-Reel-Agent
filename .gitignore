@@ -1,0 +1,35 @@
+# Secrets
+.env
+*.pem
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+# Large media & runtime data (never commit)
+media/videos/*
+media/music/*
+!media/videos/.gitkeep
+!media/music/.gitkeep
+media_demo/
+data/*.db
+data/*.db-journal
+data/cache/
+output/*
+!output/.gitkeep
+logs/*
+!logs/.gitkeep
+*.mp4
+*.mov
+*.mkv
+*.mp3
+*.wav
+*.m4a
+# Keep the human-readable history
+!history/*.csv
+data/analysis_cache/
+
+history/publication_history.csv
+
+history/publication_history.csv

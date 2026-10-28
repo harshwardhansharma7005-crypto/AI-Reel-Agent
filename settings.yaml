@@ -1,0 +1,132 @@
+
+# AI Reel Agent settings. Secrets do NOT go here - use .env / GitHub Secrets.
+project:
+  data_dir: data
+  output_dir: output
+  log_dir: logs
+
+paths:
+  video_dir: media/videos       # your technology videos
+  music_dir: media/music        # your phonk tracks (only tracks you may publish!)
+
+schedule:
+  timezone: Asia/Kolkata
+  slots:
+    morning: "10:00"
+    evening: "20:00"
+  slot_tolerance_hours: 3       # a run further than this from a slot becomes a "manual" run
+
+ai:
+  # Real vision AI analysis using Gemini API.
+  # Add GEMINI_API_KEY to your local .env file.
+  provider: gemini
+  models:
+    openai: gpt-4o-mini
+    anthropic: claude-sonnet-5-5
+    gemini: gemini-3.8-flash
+  timeout_seconds: 90
+  topics: [OpenAI, Google, Anthropic, Unity, AI Tools, Android, Other Tech]
+
+analysis:
+  cache: true                   # one cached AI analysis per video+provider+model: reruns cost nothing
+  frame_count: 6                # distinct frames (picked from a larger sample) sent to the vision model
+  max_frame_width: 768
+  ocr: auto                     # auto | off (needs pytesseract + Tesseract program)
+  tesseract_cmd: ""              # e.g. C:\Program Files\Tesseract-OCR\tesseract.exe
+  transcribe: auto              # auto | off | local | openai
+  whisper_model: base           # for local faster-whisper
+  min_source_duration: 6        # seconds; shorter videos are skipped
+
+review:
+  min_confidence: 0.6           # below this -> "review", never published
+  require_verification_for: [announcement, review]   # claim types that need an official source
+  allow_unverified_types: [tutorial, demo, opinion]  # no factual announcement is made
+
+factcheck:
+  enabled: true
+  max_age_days: 90
+  min_match_ratio: 0.5
+  # Official feeds per topic. Verify these URLs yourself; edit/add as needed.
+  feeds:
+    OpenAI: ["https://openai.com/news/rss.xml"]
+    Google: ["https://blog.google/rss/"]
+    Android: ["https://android-developers.googleblog.com/feeds/posts/default"]
+    Unity: ["https://unity.com/blog/rss"]
+    Anthropic: []                # no feed: Anthropic announcements always go to review unless you add a feed
+    AI Tools: []
+
+headline:
+  max_words: 10
+  max_chars: 70
+  min_words: 3
+  banned_phrases: ["guaranteed", "100%", "you won't believe", "shocking", "free money", "get rich", "secret they don't want"]
+  highlight_color: "#FF5733"
+  min_grounded_ratio: 0.5       # at least this share of a headline's key words must appear in the video evidence
+  filename_fallback: true       # no AI headline? use a descriptive file-name headline (marked HEURISTIC) - else review
+  generic_phrases: []           # extra phrases to reject, e.g. ["mind-blowing"] (built-in list already blocks
+                                # "technology in action", "a closer look", "worth knowing", ...)
+  similarity_threshold: 0.8     # reject headlines too similar to recent ones
+
+reel:
+  width: 1080
+  height: 1920
+  fps: 30
+  min_duration: 6
+  max_duration: 45
+  frame_mode: fixed_16_9        # fixed_16_9 (letterboxed, consistent) | fit_source
+  username: "@har.*shhh"
+  username_alpha: 190
+  safe_margin_x: 70
+  safe_top: 200                 # Instagram UI overlays the top
+  safe_bottom: 380              # ...and the bottom (caption/buttons)
+  templates: [classic, left_bold, bracket, minimal]
+  fonts:
+    headline: ""                # path to a .ttf; empty = auto-detect (Windows: Bahnschrift/Segoe UI/Arial Black)
+    username: ""
+
+audio:
+  music_volume: 0.85
+  original_audio_volume: 0.0    # 0 = music only. Try 0.15 to keep a little original sound.
+  fade_seconds: 1.0
+  loudnorm: true
+  no_repeat_window: 6           # don't reuse any of the last N songs
+
+music:
+  # You MUST set this to true to confirm you have the rights to publish every track in music_dir.
+  # While false, the agent renders but refuses to publish.
+  i_have_rights_to_publish_all_tracks: false
+  extensions: [".mp3", ".wav", ".m4a", ".aac", ".ogg", ".flac"]
+  min_track_seconds: 10
+
+dedupe:
+  video_cooldown_days: 30
+  near_duplicate_distance: 12   # perceptual hash distance (of 192 bits) at/below which videos may be duplicates
+  near_duplicate_color_diff: 14 # ...AND mean colour difference (0-255) at/below this
+  caption_similarity: 0.75
+  avoid_same_topic_twice: true
+
+validation:
+  max_file_mb: 100
+  side_margin_px: 24            # outer columns must stay dark
+  min_headline_pixels: 400
+
+publishing:
+  enabled: false                # master switch. Stays false until YOU turn it on.
+  dry_run: true                 # true = never post, even if enabled
+  api_host: graph.facebook.com  # or graph.instagram.com for "Instagram API with Instagram Login"
+  api_version: v21.0
+  upload_mode: url              # url (needs public URL via cloud storage) | resumable
+  share_to_feed: true
+  max_retries: 3
+  poll_interval_seconds: 10
+  poll_timeout_seconds: 600
+  min_remaining_quota: 1
+
+storage:
+  provider: local               # local | s3
+  s3:
+    video_prefix: videos/
+    music_prefix: music/
+    reel_prefix: reels/
+    state_key: state/history.db
+    presign_seconds: 86400

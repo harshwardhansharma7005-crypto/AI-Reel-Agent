@@ -1,0 +1,132 @@
+name: Publish Reels
+
+# IST = UTC+5:30 (no daylight saving).  10:00 IST = 04:30 UTC.  20:00 IST = 14:30 UTC.
+# NOTE: GitHub scheduled runs can start several minutes late (or be skipped under heavy load),
+# and scheduled workflows in public repos are disabled after 60 days without repo activity.
+on:
+  schedule:
+    - cron: "30 4 * * *"     # 10:00 AM IST
+    - cron: "30 14 * * *"    # 08:00 PM IST
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Really publish to Instagram? (false = dry run)"
+        type: boolean
+        default: false
+      slot:
+        description: "Slot name: auto | morning | evening | manual"
+        type: string
+        default: manual
+
+permissions:
+  contents: write      # commit publication history CSV
+  issues: write        # open an issue when a run fails
+
+concurrency:
+  group: reel-agent          # never run two publishers at the same time
+  cancel-in-progress: false
+
+jobs:
+  reel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      # Scheduled runs publish only if the repo VARIABLE  PUBLISH_ENABLED  is "true".
+      EVENT_NAME: ${{ github.event_name }}
+      INPUT_PUBLISH: ${{ inputs.publish }}
+      INPUT_SLOT: ${{ inputs.slot }}
+      VAR_PUBLISH_ENABLED: ${{ vars.PUBLISH_ENABLED }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      IG_USER_ID: ${{ secrets.IG_USER_ID }}
+      IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+      S3_BUCKET: ${{ secrets.S3_BUCKET }}
+      S3_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}
+      S3_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
+      S3_REGION: ${{ secrets.S3_REGION }}
+      S3_ENDPOINT_URL: ${{ secrets.S3_ENDPOINT_URL }}
+      REEL_USERNAME: ${{ vars.REEL_USERNAME }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install FFmpeg and Tesseract
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y ffmpeg tesseract-ocr fonts-dejavu-core
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt boto3 pytesseract
+
+      - name: Decide publish flag and slot
+        run: |
+          # Manual runs obey the checkbox ONLY. Scheduled runs publish only if repo variable PUBLISH_ENABLED=true.
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            DO_PUBLISH="$INPUT_PUBLISH"; SLOT="${INPUT_SLOT:-manual}"
+          else
+            DO_PUBLISH="$VAR_PUBLISH_ENABLED"; SLOT="auto"
+          fi
+          [ "$DO_PUBLISH" = "true" ] || DO_PUBLISH="false"
+          echo "DO_PUBLISH=$DO_PUBLISH" >> "$GITHUB_ENV"
+          echo "SLOT=$SLOT" >> "$GITHUB_ENV"
+          echo "Publish flag: $DO_PUBLISH | Slot: $SLOT"
+
+      - name: Check configuration
+        run: python -m reel_agent check
+
+      - name: Run agent (dry-run unless publishing is switched on)
+        id: run
+        run: |
+          mkdir -p logs
+          if [ "$DO_PUBLISH" = "true" ]; then FLAG="--publish"; else FLAG=""; fi
+          python -m reel_agent run --slot "$SLOT" $FLAG 2>&1 | tee logs/run.log
+          exit ${PIPESTATUS[0]}
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo "### Reel Agent run"
+            echo "- Event: ${{ github.event_name }}  |  Slot: $SLOT  |  Publish flag: $DO_PUBLISH"
+            echo '```'
+            tail -n 40 logs/run.log 2>/dev/null || echo "no log"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload logs, reel and history
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reel-run-${{ github.run_id }}
+          path: |
+            logs/
+            output/
+            history/
+          retention-days: 14
+
+      - name: Commit publication history
+        if: always()
+        run: |
+          git config user.name "reel-agent-bot"
+          git config user.email "reel-agent-bot@users.noreply.github.com"
+          git add history/publication_history.csv || true
+          git diff --cached --quiet || (git commit -m "Update publication history [skip ci]" && git pull --rebase && git push)
+
+      - name: Open an issue on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner, repo: context.repo.repo,
+              title: `Reel run failed (${new Date().toISOString()})`,
+              body: `Run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}\nDownload the logs artifact for details. No duplicate post is created on retry: the agent checks its history first.`,
+              labels: []
+            });

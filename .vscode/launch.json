@@ -1,0 +1,8 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    { "name": "Reel Agent: demo", "type": "debugpy", "request": "launch", "module": "reel_agent", "args": ["demo"], "console": "integratedTerminal" },
+    { "name": "Reel Agent: run (dry-run)", "type": "debugpy", "request": "launch", "module": "reel_agent", "args": ["run", "--slot", "manual"], "console": "integratedTerminal" },
+    { "name": "Reel Agent: check", "type": "debugpy", "request": "launch", "module": "reel_agent", "args": ["check"], "console": "integratedTerminal" }
+  ]
+}

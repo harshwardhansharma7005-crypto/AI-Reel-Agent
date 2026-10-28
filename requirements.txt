@@ -1,0 +1,13 @@
+# Core (required)
+Pillow>=10.1
+opencv-python>=4.8
+numpy>=1.24
+PyYAML>=6.0
+requests>=2.31
+python-dotenv>=1.0
+
+# Optional extras - uncomment what you need
+# boto3>=1.34              # S3 / Cloudflare R2 / Backblaze B2 cloud storage (needed for GitHub Actions)
+# pytesseract>=0.3.10      # OCR (also install the Tesseract program itself)
+# faster-whisper>=1.0      # Local speech-to-text (downloads a model on first use)
+# pytest>=8.0              # Optional; tests also run with plain "python -m unittest"
