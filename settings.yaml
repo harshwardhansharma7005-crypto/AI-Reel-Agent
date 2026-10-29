@@ -94,7 +94,7 @@ audio:
 music:
   # You MUST set this to true to confirm you have the rights to publish every track in music_dir.
   # While false, the agent renders but refuses to publish.
-  i_have_rights_to_publish_all_tracks: false
+  i_have_rights_to_publish_all_tracks: true
   extensions: [".mp3", ".wav", ".m4a", ".aac", ".ogg", ".flac"]
   min_track_seconds: 10
 
