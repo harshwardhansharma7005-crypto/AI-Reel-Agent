@@ -43,14 +43,21 @@ class AIProvider:
     def transcribe(self, wav_path):  # optional
         return None
 
+   
     def _post(self, url: str, headers: dict, payload: dict | None = None, files=None, data=None) -> dict:
         last = None
         for attempt in range(3):
             try:
                 if files is not None:
-                    r = requests.post(url, headers=headers, files=files, data=data, timeout=self.timeout)
+                    r = requests.post(
+                        url, headers=headers, files=files, data=data,
+                        timeout=(15, max(self.timeout, 180))
+                    )
                 else:
-                    r = requests.post(url, headers=headers, json=payload, timeout=self.timeout)
+                    r = requests.post(
+                        url, headers=headers, json=payload,
+                        timeout=(15, max(self.timeout, 180))
+                    )
             except requests.RequestException as e:
                 last = f"network error: {e}"
             else:
@@ -61,8 +68,15 @@ class AIProvider:
                     last += " (API key rejected or not allowed - check the key in .env)"
                 if r.status_code not in (429, 500, 502, 503, 504):
                     break
-            time.sleep(2 ** attempt)
+            if attempt < 2:
+                delay = 2 ** (attempt + 1)
+                log.warning(
+                    "%s request failed (attempt %s/3): %s; retrying in %ss",
+                    self.name, attempt + 1, last, delay
+                )
+                time.sleep(delay)
         raise AIError(f"{self.name} request failed: {last}")
+
 
 
 class HeuristicProvider(AIProvider):
