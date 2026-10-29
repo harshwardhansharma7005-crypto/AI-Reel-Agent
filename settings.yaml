@@ -123,7 +123,7 @@ publishing:
   min_remaining_quota: 1
 
 storage:
-  provider: local               # local | s3
+  provider: s3               # local | s3
   s3:
     video_prefix: videos/
     music_prefix: music/
