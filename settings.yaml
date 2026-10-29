@@ -111,8 +111,8 @@ validation:
   min_headline_pixels: 400
 
 publishing:
-  enabled: false                # master switch. Stays false until YOU turn it on.
-  dry_run: true                 # true = never post, even if enabled
+  enabled: true               # master switch. Stays false until YOU turn it on.
+  dry_run: false                 # true = never post, even if enabled
   api_host: graph.facebook.com  # or graph.instagram.com for "Instagram API with Instagram Login"
   api_version: v21.0
   upload_mode: url              # url (needs public URL via cloud storage) | resumable
