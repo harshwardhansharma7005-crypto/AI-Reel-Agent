@@ -113,7 +113,7 @@ validation:
 publishing:
   enabled: true               # master switch. Stays false until YOU turn it on.
   dry_run: false                 # true = never post, even if enabled
-  api_host: graph.facebook.com  # or graph.instagram.com for "Instagram API with Instagram Login"
+  api_host: graph.instagram.com  # or graph.instagram.com for "Instagram API with Instagram Login"
   api_version: v21.0
   upload_mode: resumable              # url (needs public URL via cloud storage) | resumable
   share_to_feed: true
