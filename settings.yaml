@@ -74,7 +74,7 @@ reel:
   min_duration: 6
   max_duration: 45
   frame_mode: fixed_16_9        # fixed_16_9 (letterboxed, consistent) | fit_source
-  username: "@har._shhh"
+  username: "@har._shhh._"
   username_alpha: 190
   safe_margin_x: 70
   safe_top: 200                 # Instagram UI overlays the top
