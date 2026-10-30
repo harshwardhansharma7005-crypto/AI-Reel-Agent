@@ -1,2 +1,2 @@
 id,slot_key,status,headline,video_hash,music_path,media_id,permalink,error,created,updated
-1,2026-10-30-evening,dry_run,Claude Duet managing daily business tasks,90941969659b70465407f63403a1fcded6ca094f,/home/runner/work/AI-Reel-Agent/AI-Reel-Agent/media/music/phonk 03.mp3,,,,2026-10-30T15:25:39+00:00,2026-10-30T15:26:03+00:00
+1,2026-10-30-manual-214543,failed,FireTrace visualizes wildfire forensics on 3D terrain,bc1922eb4adb413615e07f5c40fc3c2c9a8961b4,/home/runner/work/AI-Reel-Agent/AI-Reel-Agent/media/music/phonk 01.mp3,,,"Resumable upload failed: HTTP 400 {""debug_info"":{""retriable"":false,""type"":""ProcessingFailedError"",""message"":""Request processing failed""}}",2026-10-30T16:15:59+00:00,2026-10-30T16:17:04+00:00
