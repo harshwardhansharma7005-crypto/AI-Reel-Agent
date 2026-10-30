@@ -74,7 +74,7 @@ reel:
   min_duration: 6
   max_duration: 45
   frame_mode: fixed_16_9        # fixed_16_9 (letterboxed, consistent) | fit_source
-  username: "@har.*shhh"
+  username: "@har._shhh"
   username_alpha: 190
   safe_margin_x: 70
   safe_top: 200                 # Instagram UI overlays the top
@@ -106,7 +106,7 @@ dedupe:
   avoid_same_topic_twice: true
 
 validation:
-  max_file_mb: 100
+  max_file_mb: 200
   side_margin_px: 24            # outer columns must stay dark
   min_headline_pixels: 400
 
@@ -123,12 +123,14 @@ publishing:
   min_remaining_quota: 1
 
 storage:
-  provider: local               # local | s3
+  provider: local              # local | s3
   s3:
     video_prefix: videos/
     music_prefix: music/
     reel_prefix: reels/
     state_key: state/history.db
     presign_seconds: 86400
+
+
 
 

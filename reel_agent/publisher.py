@@ -107,7 +107,7 @@ class InstagramClient:
             log.warning("Could not read publishing quota: %s", e)
             return None
 
-    def create_container(self, caption: str, video_url: str | None = None) -> str:
+    def create_container(self, caption: str, video_url: str | None = None) -> dict:
         params = {"media_type": "REELS", "caption": caption,
                   "share_to_feed": "true" if self.cfg.get("publishing.share_to_feed", True) else "false"}
         if video_url:
@@ -115,34 +115,83 @@ class InstagramClient:
         else:
             params["upload_type"] = "resumable"
         d = self._call("POST", f"{self.base}/{self.user_id}/media", data=params)
-        if "id" not in d:
+        if not d.get("id"):
             raise PublishError("Container creation returned no id")
-        return d["id"]
+        return {"id": d["id"], "uri": d.get("uri")}
 
-    def upload_resumable(self, container_id: str, path: Path) -> None:
+    def upload_resumable(self, container_id: str, path: Path, upload_uri: str | None = None) -> None:
         size = path.stat().st_size
         host = "rupload.facebook.com"
-        url = f"https://{host}/ig-api-upload/{self.cfg.get('publishing.api_version', 'v21.0')}/{container_id}"
+        url = upload_uri or f"https://{host}/ig-api-upload/{self.cfg.get('publishing.api_version', 'v21.0')}/{container_id}"
+
+        headers = {
+            "Authorization": f"OAuth {self.token}",
+            "offset": "0",
+            "file_size": str(size),
+        }
+
         with open(path, "rb") as f:
-            payload = f.read()
-        headers = {"Authorization": f"OAuth {self.token}", "offset": "0", "file_size": str(size)}
-        r = self.http.post(url, headers=headers, data=payload, timeout=600)
+            r = self.http.post(url, headers=headers, data=f, timeout=600)
+
         if r.status_code >= 300:
-            raise PublishError(f"Resumable upload failed: HTTP {r.status_code} {r.text[:200]}")
+            raise PublishError(
+                f"Resumable upload failed: HTTP {r.status_code} {r.text[:200]}"
+            )
+
+        try:
+            result = r.json()
+        except ValueError:
+            raise PublishError(
+                f"Resumable upload returned invalid JSON: HTTP {r.status_code}"
+            ) from None
+
+        if result.get("success") is not True:
+            raise PublishError(
+                f"Resumable upload was not confirmed: {str(result)[:200]}"
+            )
 
     def wait_until_ready(self, container_id: str) -> None:
-        deadline = time.monotonic() + int(self.cfg.get("publishing.poll_timeout_seconds", 600))
+        deadline = time.monotonic() + int(
+            self.cfg.get("publishing.poll_timeout_seconds", 600)
+        )
         interval = int(self.cfg.get("publishing.poll_interval_seconds", 10))
+
         while True:
-            d = self._call("GET", f"{self.base}/{container_id}", params={"fields": "status_code,status"})
+            d = self._call(
+                "GET",
+                f"{self.base}/{container_id}",
+                params={"fields": "id,status,status_code,video_status"},
+            )
             code = d.get("status_code")
-            log.info("Container %s status: %s", container_id, code)
+            status = d.get("status", "")
+            video_status = d.get("video_status", "")
+            log.info(
+                "Container %s status_code=%s status=%s video_status=%s",
+                container_id, code, status, video_status,
+            )
+
             if code == "FINISHED":
                 return
+
             if code in ("ERROR", "EXPIRED"):
-                raise PublishError(f"Instagram processing failed: {code} {d.get('status', '')}")
+                raise PublishError(
+                    f"Instagram processing failed: status_code={code}, "
+                    f"status={status}, video_status={video_status}"
+                )
+
+            if not code:
+                raise PublishError(
+                    f"Instagram returned no status_code for container {container_id}: "
+                    f"{str(d)[:300]}"
+                )
+
             if time.monotonic() > deadline:
-                raise PublishError("Timed out waiting for Instagram to process the video")
+                raise PublishError(
+                    f"Timed out waiting for Instagram processing; "
+                    f"last status_code={code}, status={status}, "
+                    f"video_status={video_status}"
+                )
+
             self.sleep(interval)
 
     def publish_container(self, container_id: str) -> str:
@@ -191,13 +240,15 @@ def publish_reel(cfg: Config, db: Database, post_id: int, slot_key: str, video_h
             url = storage.public_url(key) if key else None
             if not url:
                 raise PublishError("Storage did not return a public URL")
-            container = client.create_container(caption, video_url=url)
+            container_data = client.create_container(caption, video_url=url)
         else:
-            container = client.create_container(caption)
-            client.upload_resumable(container, reel_path)
-        db.update_post(post_id, container_id=container)
-        client.wait_until_ready(container)
-        media_id = client.publish_container(container)
+            container_data = client.create_container(caption)
+            client.upload_resumable(container_data["id"], reel_path, container_data.get("uri"))
+
+        container_id = container_data["id"]
+        db.update_post(post_id, container_id=container_id)
+        client.wait_until_ready(container_id)
+        media_id = client.publish_container(container_id)
     except AmbiguousPublishError as e:
         db.update_post(post_id, status="unknown", error=str(e))
         log.error("Publish outcome unknown - check Instagram manually before retrying: %s", e)
