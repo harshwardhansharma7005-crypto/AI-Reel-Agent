@@ -1,35 +1,47 @@
-# Secrets
+﻿# Secrets
 .env
 *.pem
+
 # Python
 __pycache__/
 *.pyc
 .venv/
 venv/
 .pytest_cache/
-# Large media & runtime data (never commit)
+
+# Media folders: allow individual assets, except the oversized video
 media/videos/*
-media/music/*
 !media/videos/.gitkeep
+!media/videos/*.mp4
+media/videos/open ai.mp4
+
+media/music/*
 !media/music/.gitkeep
+!media/music/*.mp3
+!media/music/*.mpeg
+!media/music/*.wav
+!media/music/*.m4a
+
+# Runtime data
 media_demo/
 data/*.db
 data/*.db-journal
 data/cache/
+data/analysis_cache/
+
+# Generated output and logs
 output/*
 !output/.gitkeep
 logs/*
 !logs/.gitkeep
-*.mp4
+
+# Other media formats
 *.mov
 *.mkv
-*.mp3
-*.wav
-*.m4a
-# Keep the human-readable history
+
+# Keep human-readable history
 !history/*.csv
-data/analysis_cache/
 
-history/publication_history.csv
-
-history/publication_history.csv
+# Local backup files
+*.bak
+settings.yaml.backup
