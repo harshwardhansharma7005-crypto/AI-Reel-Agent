@@ -128,6 +128,7 @@ class InstagramClient:
             "Authorization": f"OAuth {self.token}",
             "offset": "0",
             "file_size": str(size),
+            "Content-Type": "application/octet-stream",
         }
 
         with open(path, "rb") as f:
