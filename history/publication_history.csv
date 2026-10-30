@@ -1,2 +1,2 @@
 id,slot_key,status,headline,video_hash,music_path,media_id,permalink,error,created,updated
-1,2026-10-30-manual-201046,failed,Hand-drawn style digital chess game,1bb7d3faeef0ce7fcef97330c12db48ea21b761f,/home/runner/work/AI-Reel-Agent/AI-Reel-Agent/media/music/phonk 16.mp3,,,"Resumable upload failed: HTTP 400 {""debug_info"":{""retriable"":false,""type"":""ProcessingFailedError"",""message"":""Request processing failed""}}",2026-10-30T14:40:58+00:00,2026-10-30T14:42:05+00:00
+1,2026-10-30-evening,dry_run,Claude Duet managing daily business tasks,90941969659b70465407f63403a1fcded6ca094f,/home/runner/work/AI-Reel-Agent/AI-Reel-Agent/media/music/phonk 03.mp3,,,,2026-10-30T15:25:39+00:00,2026-10-30T15:26:03+00:00
