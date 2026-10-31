@@ -1,2 +1,2 @@
 id,slot_key,status,headline,video_hash,music_path,media_id,permalink,error,created,updated
-1,2026-10-31-evening,failed,Perform regulatory horizon scans using Claude,ec4d8de04ee8353b11dd4da6ca46722f8741df71,/home/runner/work/AI-Reel-Agent/AI-Reel-Agent/media/music/phonk 10.mp3,,,HTTP 400 code=10 (#10) Application does not have permission for this action,2026-10-31T15:06:05+00:00,2026-10-31T15:06:31+00:00
+1,2026-10-31-evening,failed,Add small business plugins to your ChatGPT interface,95853c2eb61be814819199fc5489d5d09a0b4636,/home/runner/work/AI-Reel-Agent/AI-Reel-Agent/media/music/phonk 06.mp3,,,HTTP 400 code=10 (#10) Application does not have permission for this action,2026-10-31T15:45:22+00:00,2026-10-31T15:45:37+00:00
