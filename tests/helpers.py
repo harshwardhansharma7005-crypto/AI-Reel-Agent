@@ -35,6 +35,7 @@ def make_cfg(tmp: Path, copy_media: bool = True, **overrides) -> Config:
         vdir.mkdir(parents=True, exist_ok=True)
         mdir.mkdir(parents=True, exist_ok=True)
     cfg = load_config(PROJECT_ROOT / "settings.yaml", root=tmp, load_env=False)
+    cfg.set("ai.provider", "heuristic")
     cfg.set("paths.video_dir", str(vdir))
     cfg.set("paths.music_dir", str(mdir))
     cfg.set("project.data_dir", str(tmp / "data"))
