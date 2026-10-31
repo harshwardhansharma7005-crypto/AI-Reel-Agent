@@ -8,6 +8,7 @@ on:
     - cron: "30 4 * * *"     # 10:00 AM IST
     - cron: "30 14 * * *"    # 08:00 PM IST
     - cron: "11 18 * * *"    # 11:41 PM IST 
+    - cron: "10 10 * * *"    # 03:40 PM IST
   workflow_dispatch:
     inputs:
       publish:
