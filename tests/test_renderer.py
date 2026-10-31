@@ -85,7 +85,7 @@ class RendererTests(unittest.TestCase):
             self.assertNotIn(accent, c2, f"{name}: second line must not be orange")
 
     def test_username_text_and_centering_below_video(self):
-        self.assertEqual(self.cfg.get("reel.username"), "@har.*shhh")
+        self.assertEqual(self.cfg.get("reel.username"), "@har._shhh._")
         for name, tpl in TEMPLATES.items():
             img, lay = build_overlay(self.cfg, Headline("A smart Unity workflow worth knowing", ["Unity"]), tpl, 1280, 720)
             vx, vy, vw, vh = lay.video_rect
