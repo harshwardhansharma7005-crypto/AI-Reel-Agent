@@ -97,6 +97,37 @@ def load_config(path: str | os.PathLike | None = None, overrides: dict | None = 
         cfg.set("paths.music_dir", os.environ["REEL_MUSIC_DIR"])
     if os.environ.get("REEL_USERNAME"):
         cfg.set("reel.username", os.environ["REEL_USERNAME"])
+            def read_bool_env(name):
+        raw = os.environ.get(name)
+
+        if raw is None or not raw.strip():
+            return None
+
+        value = raw.strip().lower()
+
+        if value in {"1", "true", "yes", "on"}:
+            return True
+
+        if value in {"0", "false", "no", "off"}:
+            return False
+
+        raise ConfigError(f"{name} must be true or false")
+
+    publish_enabled = read_bool_env("PUBLISH_ENABLED")
+
+    if publish_enabled is not None:
+        cfg.set("publishing.enabled", publish_enabled)
+        cfg.set("publishing.dry_run", not publish_enabled)
+
+    rights_confirmed = read_bool_env(
+        "MUSIC_PUBLISH_RIGHTS_CONFIRMED"
+    )
+
+    if rights_confirmed is not None:
+        cfg.set(
+            "music.i_have_rights_to_publish_all_tracks",
+            rights_confirmed
+        )
     return cfg
 
 
