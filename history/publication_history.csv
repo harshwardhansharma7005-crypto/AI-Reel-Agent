@@ -1,2 +1,2 @@
 id,slot_key,status,headline,video_hash,music_path,media_id,permalink,error,created,updated
-1,2026-10-31-evening,failed,Add small business plugins to your ChatGPT interface,95853c2eb61be814819199fc5489d5d09a0b4636,/home/runner/work/AI-Reel-Agent/AI-Reel-Agent/media/music/phonk 06.mp3,,,HTTP 400 code=10 (#10) Application does not have permission for this action,2026-10-31T15:45:22+00:00,2026-10-31T15:45:37+00:00
+1,2026-11-01-manual-030257,failed,Hand-drawn characters on a digital chess board,1bb7d3faeef0ce7fcef97330c12db48ea21b761f,/home/runner/work/AI-Reel-Agent/AI-Reel-Agent/media/music/TEST PHONK.mp3,,,HTTP 400 code=10 (#10) Application does not have permission for this action,2026-10-31T21:33:09+00:00,2026-10-31T21:33:42+00:00
