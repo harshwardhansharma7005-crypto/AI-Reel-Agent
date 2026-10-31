@@ -47,29 +47,32 @@ class ConfigTests(unittest.TestCase):
         self.assertEqual(cfg.get("reel.username"), "@brand")
         self.assertEqual(cfg.get("paths.video_dir"), "/x/vids")
 
+    
     def test_workflow_cron_matches_ist_slots(self):
-    import yaml
+        import yaml
 
-    wf = yaml.safe_load(
-        (PROJECT_ROOT / ".github/workflows/reels.yml").read_text(encoding="utf-8")
-    )
-    triggers = wf.get("on") or wf.get(True)
+        wf = yaml.safe_load(
+            (PROJECT_ROOT / ".github/workflows/reels.yml").read_text(encoding="utf-8")
+        )
+        triggers = wf.get("on") or wf.get(True)
 
-    expected_ist = {
-        "30 4 * * *": (10, 0),    # 10:00 AM
-        "10 10 * * *": (15, 40),  # 3:40 PM
-        "30 14 * * *": (20, 0),   # 8:00 PM
-        "11 18 * * *": (23, 41), # 11:41 PM
-    }
+        expected_ist = {
+            "30 4 * * *": (10, 0),    # 10:00 AM
+            "10 10 * * *": (15, 40),  # 03:40 PM
+            "30 14 * * *": (20, 0),   # 08:00 PM
+            "11 18 * * *": (23, 41),  # 11:41 PM
+        }
 
-    crons = sorted(c["cron"] for c in triggers["schedule"])
-    self.assertEqual(crons, sorted(expected_ist))
-    self.assertIn("workflow_dispatch", triggers)
+        crons = sorted(c["cron"] for c in triggers["schedule"])
+        self.assertEqual(crons, sorted(expected_ist.keys()))
+        self.assertIn("workflow_dispatch", triggers)
 
-    for cron, expected in expected_ist.items():
-        minute, hour = map(int, cron.split()[:2])
-        total = (hour * 60 + minute + 330) % 1440
-        self.assertEqual((total // 60, total % 60), expected)
+        for cron, expected_time in expected_ist.items():
+            minute, hour = map(int, cron.split()[:2])
+            total = (hour * 60 + minute + 330) % 1440
+            actual_time = (total // 60, total % 60)
+            self.assertEqual(actual_time, expected_time)
+
 
     def test_workflow_manual_dry_run_cannot_publish_via_variable(self):
         """Regression: `cond && inputs.publish || var` would publish when inputs.publish is false."""
