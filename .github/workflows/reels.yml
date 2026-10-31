@@ -38,6 +38,7 @@ jobs:
       INPUT_PUBLISH: ${{ inputs.publish }}
       INPUT_SLOT: ${{ inputs.slot }}
       VAR_PUBLISH_ENABLED: ${{ vars.PUBLISH_ENABLED }}
+      VAR_MUSIC_PUBLISH_RIGHTS_CONFIRMED: ${{ vars.MUSIC_PUBLISH_RIGHTS_CONFIRMED }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -76,6 +77,8 @@ jobs:
             DO_PUBLISH="$VAR_PUBLISH_ENABLED"; SLOT="auto"
           fi
           [ "$DO_PUBLISH" = "true" ] || DO_PUBLISH="false"
+          echo "PUBLISH_ENABLED=$DO_PUBLISH" >> "$GITHUB_ENV"
+          echo "MUSIC_PUBLISH_RIGHTS_CONFIRMED=$VAR_MUSIC_PUBLISH_RIGHTS_CONFIRMED" >> "$GITHUB_ENV"
           echo "DO_PUBLISH=$DO_PUBLISH" >> "$GITHUB_ENV"
           echo "SLOT=$SLOT" >> "$GITHUB_ENV"
           echo "Publish flag: $DO_PUBLISH | Slot: $SLOT"
