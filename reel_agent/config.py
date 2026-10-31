@@ -97,7 +97,7 @@ def load_config(path: str | os.PathLike | None = None, overrides: dict | None = 
         cfg.set("paths.music_dir", os.environ["REEL_MUSIC_DIR"])
     if os.environ.get("REEL_USERNAME"):
         cfg.set("reel.username", os.environ["REEL_USERNAME"])
-            def read_bool_env(name):
+    def read_bool_env(name):
         raw = os.environ.get(name)
 
         if raw is None or not raw.strip():
