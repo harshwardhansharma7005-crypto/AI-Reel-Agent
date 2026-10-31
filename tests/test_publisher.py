@@ -73,8 +73,16 @@ class PublisherTests(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, self.tmp, True)
-        self.cfg = make_cfg(self.tmp, copy_media=False, publishing__enabled=True, publishing__dry_run=False,
-                            music__i_have_rights_to_publish_all_tracks=True)
+       
+        self.cfg = make_cfg(
+            self.tmp,
+            copy_media=False,
+            publishing__enabled=True,
+            publishing__dry_run=False,
+            publishing__upload_mode="url",
+            music__i_have_rights_to_publish_all_tracks=True,
+        )
+
         self.db = Database(self.tmp / "h.db")
         self.addCleanup(self.db.close)
         self.reel = self.tmp / "r.mp4"
