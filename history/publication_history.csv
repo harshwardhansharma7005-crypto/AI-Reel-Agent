@@ -1,2 +1,2 @@
 id,slot_key,status,headline,video_hash,music_path,media_id,permalink,error,created,updated
-1,2026-11-02-manual-003535,failed,GPT-6.1 Terra generates a 3D model from a Lisbon tram,0cb5908d133d83fda8ad5fc753b2bebe13d77d94,/home/runner/work/AI-Reel-Agent/AI-Reel-Agent/media/music/phonk 01.mp3,,,HTTP 400 code=10 (#10) Application does not have permission for this action,2026-11-01T19:06:22+00:00,2026-11-01T19:06:52+00:00
+1,2026-11-02-manual-033031,failed,Run small business tools inside ChatGPT,95853c2eb61be814819199fc5489d5d09a0b4636,/home/runner/work/AI-Reel-Agent/AI-Reel-Agent/media/music/phonk 03.mp3,,,HTTP 400 code=10 (#10) Application does not have permission for this action,2026-11-01T22:01:28+00:00,2026-11-01T22:01:41+00:00
