@@ -1,2 +1,2 @@
 id,slot_key,status,headline,video_hash,music_path,media_id,permalink,error,created,updated
-1,2026-11-01-manual-165627,failed,Turn your sketches into images with ChatGPT,1194e1fc6bf642bec22bed586098e497dd4389a7,/home/runner/work/AI-Reel-Agent/AI-Reel-Agent/media/music/phonk 18.mp3,,,HTTP 400 code=10 (#10) Application does not have permission for this action,2026-11-01T11:26:40+00:00,2026-11-01T11:26:57+00:00
+1,2026-11-01-evening,failed,Using ChatGPT for financial services market analysis,3b11217ba881128561474ed4f99dcb51db117256,/home/runner/work/AI-Reel-Agent/AI-Reel-Agent/media/music/phonk 16.mp3,,,HTTP 400 code=10 (#10) Application does not have permission for this action,2026-11-01T16:48:07+00:00,2026-11-01T16:48:32+00:00
