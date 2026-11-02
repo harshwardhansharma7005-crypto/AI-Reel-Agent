@@ -119,6 +119,7 @@ class InstagramClient:
             raise PublishError("Container creation returned no id")
         return {"id": d["id"], "uri": d.get("uri")}
 
+    
     def upload_resumable(self, container_id: str, path: Path, upload_uri: str | None = None) -> None:
         size = path.stat().st_size
         host = "rupload.facebook.com"
@@ -128,15 +129,22 @@ class InstagramClient:
             "Authorization": f"OAuth {self.token}",
             "offset": "0",
             "file_size": str(size),
-            "Content-Type": "application/octet-stream",
         }
+        payload = path.read_bytes()
 
-        with open(path, "rb") as f:
-            r = self.http.post(url, headers=headers, data=f, timeout=600)
+        r = self.http.post(url, headers=headers, data=payload, timeout=600)
+
+        response_headers = getattr(r, "headers", {}) or {}
+        log.info(
+            "rupload url=%s file_size=%s status=%s trace=%s body=%s",
+            url, size, r.status_code,
+            response_headers.get("x-fb-trace-id") or response_headers.get("x-fb-request-id"),
+            r.text[:1000],
+        )
 
         if r.status_code >= 300:
             raise PublishError(
-                f"Resumable upload failed: HTTP {r.status_code} {r.text[:200]}"
+                f"Resumable upload failed: HTTP {r.status_code} {r.text[:1000]}"
             )
 
         try:
@@ -148,7 +156,7 @@ class InstagramClient:
 
         if result.get("success") is not True:
             raise PublishError(
-                f"Resumable upload was not confirmed: {str(result)[:200]}"
+                f"Resumable upload was not confirmed: {str(result)[:300]}"
             )
 
     def wait_until_ready(self, container_id: str) -> None:
