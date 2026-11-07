@@ -1,2 +1,2 @@
 id,slot_key,status,headline,video_hash,music_path,media_id,permalink,error,created,updated
-1,2026-11-07-manual-164534,published,Open ai compressed,0cb5908d133d83fda8ad5fc753b2bebe13d77d94,/home/runner/work/AI-Reel-Agent/AI-Reel-Agent/media/music/phonk 16.mp3,18130517312484444,https://www.instagram.com/reel/DfcD4n8k5-8/,,2026-11-07T11:20:08+00:00,2026-11-07T11:21:06+00:00
+1,2026-11-07-evening,failed,Generating a 3D Lisbon tram model from an image,0cb5908d133d83fda8ad5fc753b2bebe13d77d94,/home/runner/work/AI-Reel-Agent/AI-Reel-Agent/media/music/phonk 05.mp3,,,"Resumable upload failed: HTTP 400 {""debug_info"":{""retriable"":false,""type"":""ProcessingFailedError"",""message"":""Request processing failed""}}",2026-11-07T16:22:27+00:00,2026-11-07T16:23:23+00:00
