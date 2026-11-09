@@ -1,2 +1,2 @@
 id,slot_key,status,headline,video_hash,music_path,media_id,permalink,error,created,updated
-1,2026-11-09-manual-033232,published,Hand-drawn digital chess gameplay,1bb7d3faeef0ce7fcef97330c12db48ea21b761f,/home/runner/work/AI-Reel-Agent/AI-Reel-Agent/media/music/phonk 17.mp3,18347021413271932,https://www.instagram.com/reel/DffyNRAoMVF/,,2026-11-08T22:02:40+00:00,2026-11-08T22:03:36+00:00
+1,2026-11-09-evening,failed,Using ChatGPT for earnings call analysis,3b11217ba881128561474ed4f99dcb51db117256,/home/runner/work/AI-Reel-Agent/AI-Reel-Agent/media/music/phonk 12.mp3,,,"Resumable upload failed: HTTP 400 {""debug_info"":{""retriable"":false,""type"":""ProcessingFailedError"",""message"":""Request processing failed""}}",2026-11-09T13:14:44+00:00,2026-11-09T13:15:35+00:00
