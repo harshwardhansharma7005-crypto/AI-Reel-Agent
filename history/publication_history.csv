@@ -1,2 +1,2 @@
 id,slot_key,status,headline,video_hash,music_path,media_id,permalink,error,created,updated
-1,2026-11-11-manual-232156,failed,Hand-drawn digital chess game,1bb7d3faeef0ce7fcef97330c12db48ea21b761f,/home/runner/work/AI-Reel-Agent/AI-Reel-Agent/media/music/phonk 16.mp3,,,"Resumable upload failed: HTTP 400 {""debug_info"":{""retriable"":false,""type"":""ProcessingFailedError"",""message"":""Request processing failed""}}",2026-11-11T17:53:25+00:00,2026-11-11T17:54:27+00:00
+1,2026-11-12-manual-030034,published,Generate a 15-second 3D animated scene,8aa0529c174ea3812f6e4913b363af0a377bb6be,/home/runner/work/AI-Reel-Agent/AI-Reel-Agent/media/music/phonk 13.mp3,17939986296401317,https://www.instagram.com/reel/Dfnc7dhgC-_/,,2026-11-11T21:30:46+00:00,2026-11-11T21:31:42+00:00
