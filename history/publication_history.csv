@@ -1,1 +1,2 @@
 id,slot_key,status,headline,video_hash,music_path,media_id,permalink,error,created,updated
+1,2026-11-25-manual-020741,failed,Design a home office for your fish with AI,7fc5f3ccfd8a27e11dc84aefb67dabf3ef5db583,/home/runner/work/AI-Reel-Agent/AI-Reel-Agent/media/music/phonk 02.mp3,,,"Resumable upload failed: HTTP 400 {""debug_info"":{""retriable"":false,""type"":""ProcessingFailedError"",""message"":""Request processing failed""}}",2026-11-24T20:38:32+00:00,2026-11-24T20:39:36+00:00
