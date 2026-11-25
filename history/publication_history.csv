@@ -1,1 +1,2 @@
 id,slot_key,status,headline,video_hash,music_path,media_id,permalink,error,created,updated
+1,2026-11-26-manual-012327,failed,Generate a regulatory horizon scan using Claude,ec4d8de04ee8353b11dd4da6ca46722f8741df71,/home/runner/work/AI-Reel-Agent/AI-Reel-Agent/media/music/phonk 03.mp3,,,"Resumable upload failed: HTTP 400 {""debug_info"":{""retriable"":false,""type"":""ProcessingFailedError"",""message"":""Request processing failed""}}",2026-11-25T19:58:48+00:00,2026-11-25T19:59:39+00:00
